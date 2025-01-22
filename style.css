@@ -1,0 +1,37 @@
+.container {
+    display: grid;
+    grid-template: 2fr 1fr 3fr / 1.5fr 1fr 1.5fr
+}
+
+.btnNew {
+    grid-column: 2 / 3;
+}
+
+.player1Div {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.player2Div {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+}
+
+.gameboardDiv {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr
+}
+
+.boardSpace {
+    border-style: solid;
+    width: 5rem;
+}
+
+.boardSpace img {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    width: 4rem;
+}
