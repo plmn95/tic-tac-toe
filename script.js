@@ -30,17 +30,19 @@ const gameboard = (function() {
 const player = (function() {
     const playerName = 'Player'
     const symbol = 'x'
-
     let score = 0
 
-    const giveScore = () => score++
+    const win = function() {
+        score++
+        displayController.updateScore('player', score)
+    }
     const printScore = () => console.log(`${playerName} has ${score} score`)
     const mark = function(spot) {
         gameboard.mark(spot, symbol)
         displayController.mark(spot, symbol)
     }
 
-    return { giveScore, printScore, mark, symbol }
+    return { printScore, mark, symbol, win }
 })()
 
 const computer = (function() {
@@ -57,7 +59,12 @@ const computer = (function() {
         }
     }
 
-    return { mark, playerName, symbol }
+    const win = function() {
+        score++
+        displayController.score('computer', score)
+    }
+
+    return { mark, win, playerName, symbol }
 
 })()
 
@@ -96,6 +103,14 @@ const gameController = (function() {
             board[4] == mark &&
             board[6] == mark) {
             console.log('win')
+            switch (mark) {
+                case 'x':
+                    player.win()
+                    break;
+                case 'o':
+                    computer.win()
+                    break;
+            }
             return true
         } else if(!gameboard.board.includes(0)) {
             console.log('game is equal')
@@ -118,13 +133,11 @@ const gameController = (function() {
     }
 
     const newGame = function() {
-        const btn = document.querySelector('btnNew')
-        btn.addEventListener('click', () => {
-
-        })
+        gameboard.reset()
+        displayController.reset()
     }
 
-    return { checkWin, play }
+    return { checkWin, play, newGame }
 
 })()
 
@@ -136,6 +149,9 @@ const displayController = (function() {
         const btnNew = document.createElement('button')
         btnNew.classList.add('btnNew')
         btnNew.innerText = "NEW GAME"
+        btnNew.addEventListener('click', () => {
+            gameController.newGame()
+        })
         container.appendChild(btnNew)
     
         const player1Div = document.createElement('div')
@@ -146,7 +162,7 @@ const displayController = (function() {
         player1Title.innerText = "PLAYER 1"
         player1Div.appendChild(player1Title)
         const score1Text = document.createElement('p')
-        score1Text.innerText = 'SCORE'
+        score1Text.innerText = 'SCORE: 0'
         player1Div.appendChild(score1Text)
     
         const player2Div = document.createElement('div')
@@ -154,10 +170,10 @@ const displayController = (function() {
         container.appendChild(player2Div)
         const player2Title = document.createElement('h2')
         player2Title.classList.add('player2Title')
-        player2Title.innerText = "PLAYER 2"
+        player2Title.innerText = 'PLAYER 2'
         player2Div.appendChild(player2Title)
         const score2Text = document.createElement('p')
-        score2Text.innerText = 'SCORE'
+        score2Text.innerText = 'SCORE: 0'
         player2Div.appendChild(score2Text)
     
         const gameboardDiv = document.createElement('div')
@@ -173,7 +189,20 @@ const displayController = (function() {
             })
         })
 
+        return { score1Text, score2Text }
+
     })()
+
+    const updateScore = function(who, score) {
+        switch (who) {
+            case 'player':
+                score1Text.innerText = `SCORE: ${score}`
+                break;
+            case 'computer':
+                score2Text.innerText = `SCORE: ${score}`
+                break;
+        }
+    }
 
     const mark = function(spot, symbol) {
         let imgUrl
@@ -194,12 +223,13 @@ const displayController = (function() {
 
     const reset = function() {
         const divs = document.querySelectorAll('.boardSpace')
-        divs.forEach(div => {
-            const img = document.querySelector('.symbol')
-            div.removeChild(img)
+        divs.forEach((div) => {
+            if(div.hasChildNodes() == true) {
+                div.removeChild(div.firstChild)
+            }
         })
     }
 
-    return { mark, reset }
+    return { mark, reset, updateScore }
 
 })()
