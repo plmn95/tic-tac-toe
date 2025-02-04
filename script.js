@@ -122,7 +122,8 @@ const gameController = (function() {
         }
     }
 
-    const play = function(spot) {
+    const play = function(div) {
+        let spot = div.slice(6)
         console.log(spot)
         if(gameboard.checkEmpty(spot) == true) {
             player.mark(spot)
@@ -186,7 +187,7 @@ const displayController = (function() {
         gameboard.board.forEach((e, i) => {
             let div = document.createElement('div')
             div.classList.add('boardSpace')
-            div.id = `${i}`
+            div.id = `square${i}`
             gameboardDiv.appendChild(div)
             div.addEventListener('click', () => {
                 gameController.play(div.id)
@@ -221,7 +222,7 @@ const displayController = (function() {
                 imgUrl = 'images/o.png'
                 break;
         }
-        const div = document.getElementById(spot)
+        const div = document.getElementById(`square${spot}`)
         const img = document.createElement('img')
         img.classList.add('symbol')
         img.setAttribute('src', imgUrl)
