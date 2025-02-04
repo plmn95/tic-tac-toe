@@ -48,6 +48,7 @@ const player = (function() {
 const computer = (function() {
     const playerName = "Computer"
     const symbol = "o"
+    let score = 0
 
     const mark = function() {
         let spot = Math.floor(Math.random() * 9)
@@ -61,7 +62,7 @@ const computer = (function() {
 
     const win = function() {
         score++
-        displayController.score('computer', score)
+        displayController.updateScore('computer', score)
     }
 
     return { mark, win, playerName, symbol }
@@ -144,6 +145,7 @@ const gameController = (function() {
 const displayController = (function() {
 
     const initialize = (function() {
+
         const container = document.querySelector('.container')
 
         const btnNew = document.createElement('button')
@@ -162,6 +164,7 @@ const displayController = (function() {
         player1Title.innerText = "PLAYER 1"
         player1Div.appendChild(player1Title)
         const score1Text = document.createElement('p')
+        score1Text.classList.add('pScore1')
         score1Text.innerText = 'SCORE: 0'
         player1Div.appendChild(score1Text)
     
@@ -173,6 +176,7 @@ const displayController = (function() {
         player2Title.innerText = 'PLAYER 2'
         player2Div.appendChild(player2Title)
         const score2Text = document.createElement('p')
+        score2Text.classList.add('pScore2')
         score2Text.innerText = 'SCORE: 0'
         player2Div.appendChild(score2Text)
     
@@ -194,12 +198,15 @@ const displayController = (function() {
     })()
 
     const updateScore = function(who, score) {
+        let paragraph
         switch (who) {
             case 'player':
-                score1Text.innerText = `SCORE: ${score}`
+                paragraph = document.querySelector('.pScore1')
+                paragraph.innerText = `SCORE: ${score}`
                 break;
             case 'computer':
-                score2Text.innerText = `SCORE: ${score}`
+                paragraph = document.querySelector('.pScore2')
+                paragraph.innerText = `SCORE: ${score}`
                 break;
         }
     }
