@@ -36,13 +36,12 @@ const player = (function() {
         score++
         displayController.updateScore('player', score)
     }
-    const printScore = () => console.log(`${playerName} has ${score} score`)
     const mark = function(spot) {
         gameboard.mark(spot, symbol)
         displayController.mark(spot, symbol)
     }
 
-    return { printScore, mark, symbol, win }
+    return { mark, symbol, win }
 })()
 
 const computer = (function() {
@@ -103,7 +102,6 @@ const gameController = (function() {
             board[2] == mark &&
             board[4] == mark &&
             board[6] == mark) {
-            console.log('win')
             switch (mark) {
                 case 'x':
                     player.win()
@@ -114,17 +112,14 @@ const gameController = (function() {
             }
             return true
         } else if(!gameboard.board.includes(0)) {
-            console.log('game is equal')
             return true
         } else {
-            console.log('not yet')
             return false
         }
     }
 
     const play = function(div) {
         let spot = div.slice(6)
-        console.log(spot)
         if(gameboard.checkEmpty(spot) == true) {
             player.mark(spot)
             if(gameController.checkWin(gameboard.board, player.symbol) == false) {
